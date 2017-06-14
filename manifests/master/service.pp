@@ -1,4 +1,4 @@
-class hbase::masterserver::service {
+class hbase::master::service {
 
   if $hbase::service_install {
 
