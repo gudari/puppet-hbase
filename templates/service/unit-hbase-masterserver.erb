@@ -4,7 +4,7 @@ Documentation=https://hbase.apache.org
 
 [Service]
 Type=simple
-PremissionsStartOnly=true
+PermissionsStartOnly=true
 User=<%= scope.lookupvar('hbase::hbase_user') %>
 Group=<%= scope.lookupvar('hbase::hbase_group') %>
 SyslogIdentifier=<%= scope.lookupvar('hbase::service_masterserver') %>

@@ -15,6 +15,8 @@ class hbase::params {
 
 
   $service_install    = true
+  $service_master     = 'hbase_master'
+  $service_regionserver = 'hbase_regionserver'
   $service_name       = 'hbase'
   $service_ensure     = 'running'
 

@@ -59,10 +59,10 @@ class hbase (
 
   $custom_hbase_site = {},
 
-  $service_install       = $hbase::params::service_install,
-  $service_master_server = $hbase::params::service_master_server,
-  $service_region_server = $hbase::params::service_region_server,
-  $service_ensure        = $hbase::params::Service_ensure,
+  $service_install      = $hbase::params::service_install,
+  $service_master       = $hbase::params::service_master,
+  $service_regionserver = $hbase::params::service_regionserver,
+  $service_ensure       = $hbase::params::Service_ensure,
 
   $hbase_group       = $hbase::params::hbase_group,
   $hbase_gid         = $hbase::params::hbase_gid,
@@ -72,8 +72,8 @@ class hbase (
   $package_name      = $hbase::params::package_name,
   $package_ensure    = $hbase::params::package_ensure,
 
-  $master_server     = $::fqdn,
-  $region_servers    = [ $::fqdn ],
+  $master   = $::fqdn,
+  $regionservers    = [ $::fqdn ],
 
 ) inherits hbase::params {
 
@@ -89,10 +89,20 @@ class hbase (
     require => Group[ $hbase_group ],
   }
 
-  if 
+  if $master == $::fqdn {
+    $daemon_master = true
+  } else {
+    $daemon_master = false
+  }
+
+  if member($regionservers, $::fqdn) {
+    $daemon_regionserver = true
+  } else {
+    $daemon_regionserver = false
+  }
 
   $hbase_site = deep_merge($hbase::params::default_hbase_site, $custom_hbase_site)
 
-  anchor { '::hbase::start': } -> class { '::hbase::install': } -> class { '::hbase::config': } ~> class { '::hbase::service' } -> anchor { '::hbase::end': }
+  anchor { '::hbase::start': } -> class { '::hbase::install': } -> class { '::hbase::config': } ~> class { '::hbase::service': } -> anchor { '::hbase::end': }
 
 }
