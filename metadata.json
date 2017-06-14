@@ -1,0 +1,15 @@
+{
+  "name": "puppet-hbase",
+  "version": "0.0.1",
+  "author": "gudari",
+  "summary": "Puppet module to install and configure Apache Hbase",
+  "license": "Apache-2.0",
+  "source": "https://github.com/gudari/puppet-hbase.git",
+  "project_page": "https://github.com/gudari/puppet-hbase",
+  "issues_url": "https://github.com/gudari/puppet-hbase/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ],
+  "data_provider": null
+}
+
