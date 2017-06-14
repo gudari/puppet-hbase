@@ -62,7 +62,7 @@ class hbase (
   $service_install      = $hbase::params::service_install,
   $service_master       = $hbase::params::service_master,
   $service_regionserver = $hbase::params::service_regionserver,
-  $service_ensure       = $hbase::params::Service_ensure,
+  $service_ensure       = $hbase::params::service_ensure,
 
   $hbase_group       = $hbase::params::hbase_group,
   $hbase_gid         = $hbase::params::hbase_gid,
