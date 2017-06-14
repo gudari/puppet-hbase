@@ -1,0 +1,27 @@
+[Unit]
+Description=Apache Hbase Master Server
+Documentation=https://hbase.apache.org
+
+[Service]
+Type=simple
+PremissionsStartOnly=true
+User=<%= scope.lookupvar('hbase::hbase_user') %>
+Group=<%= scope.lookupvar('hbase::hbase_group') %>
+SyslogIdentifier=<%= scope.lookupvar('hbase::service_masterserver') %>
+Environment='HBASE_PID_DIR=<%= scope.lookupvar('hbase::pid_dir') %>'
+Environment='HBASE_LOG_DIR=<%= scope.lookupvar('hbase::log_dir') %>'
+Environment='HBASE_CONF_DIR=<%= scope.lookupvar('hbase::config_dir') %>'
+Environment='JAVA_HOME=/usr'
+ExecStartPre=/bin/makedir -p <%= scope.lookupvar('hbase::pid_dir') %>
+ExecStartPre=/bin/chown -R <%= scope.lookupvar('hbase::hbase_user') %>:<%= scope.lookupvar('hbase::hbase_group') %> <%= scope.lookupvar('hbase::pid_dir') %>
+ExecStart=<%= scope.lookupvar('hbase::install_dir') %>/bin/hbase-daemon.sh --config $HBASE_CONF_DIR start master
+ExecStop=<%= scope.lookupvar('hbase::install_dir') %>/bin/hbase-daemon.sh --config $HBASE_CONF_DIR stop master
+PIDFile=<%= scope.lookupvar('hbase::pid_dir') %>/hbase-master.pid
+
+LimitNOFILE=65536
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target
+
+

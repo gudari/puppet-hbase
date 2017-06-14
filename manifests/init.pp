@@ -51,7 +51,7 @@ class hbase (
   $download_dir      = $hbase::params::download_dir,
   $mirror_url        = $hbase::params::mirror_url,
   $basefilename      = "hbase-${version}-bin.tar.gz",
-  $package_url       = "${mirror_url}/hbase/${version}/${basefilename}"
+  $package_url       = "${mirror_url}/hbase/${version}/${basefilename}",
   $log_dir           = $hbase::params::log_dir,
   $pid_dir           = $hbase::params::pid_dir,
 
@@ -59,9 +59,10 @@ class hbase (
 
   $custom_hbase_site = {},
 
-  $service_install   = $hbase::params::service_install,
-  $service_name      = $hbase::params::service_name,
-  $service_ensure    = $hbase::params::Service_ensure,
+  $service_install       = $hbase::params::service_install,
+  $service_master_server = $hbase::params::service_master_server,
+  $service_region_server = $hbase::params::service_region_server,
+  $service_ensure        = $hbase::params::Service_ensure,
 
   $hbase_group       = $hbase::params::hbase_group,
   $hbase_gid         = $hbase::params::hbase_gid,
@@ -70,6 +71,9 @@ class hbase (
 
   $package_name      = $hbase::params::package_name,
   $package_ensure    = $hbase::params::package_ensure,
+
+  $master_server     = $::fqdn,
+  $region_servers    = [ $::fqdn ],
 
 ) inherits hbase::params {
 
@@ -85,7 +89,9 @@ class hbase (
     require => Group[ $hbase_group ],
   }
 
-  $hbase_site = deep_merge($hbase::params::default_hbase_site, $custom_hbase_site),
+  if 
+
+  $hbase_site = deep_merge($hbase::params::default_hbase_site, $custom_hbase_site)
 
   anchor { '::hbase::start': } -> class { '::hbase::install': } -> class { '::hbase::config': } ~> class { '::hbase::service' } -> anchor { '::hbase::end': }
 
