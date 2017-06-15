@@ -38,7 +38,7 @@ class hbase::master::service {
     }
 
     service { $hbase::service_master:
-      ensure     => installed,
+      ensure     => $hbase::service_ensure,
       enable     => true,
       hasstatus  => true,
       hasrestart => true,
