@@ -10,14 +10,14 @@ class hbase::regionserver::service {
         path        => '/usr/bin',
       }
 
-      file { "${hbase::service_regionserver}.server":
+      file { "${hbase::service_regionserver}.service":
         ensure  => file,
         path    => "/etc/systemd/system/${hbase::service_regionserver}.service",
         mode    => '0644',
-        content => template('hbase/service/unit-habse-regionserver.erb'),
+        content => template('hbase/service/unit-hbase-regionserver.erb'),
       }
 
-      file { "${/etc/init.d/${hbase::service_regionserver}":
+      file { "/etc/init.d/${hbase::service_regionserver}":
         ensure => absent,
       }
 
@@ -30,7 +30,7 @@ class hbase::regionserver::service {
       file { "${hbase::service_regionserver}.service":
         ensure  => file,
         path    => "/etc/init.d/${hbase::service_regionserver}",
-        more    => '0755',
+        mode    => '0755',
         content => template('hbase/init.erb'),
         before  => Service[ $hbase::server_regionserver ],
       }

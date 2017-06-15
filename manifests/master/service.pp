@@ -4,45 +4,46 @@ class hbase::master::service {
 
     if $::service_provider == 'systemd' {
 
-      exec { "systemctl-daemon-reload-${hbase::service_master_server}":
+      exec { "systemctl-daemon-reload-${hbase::service_master}":
         command     => 'systemctl daemon-reload',
         refreshonly => true,
         path        => '/usr/bin',
       }
 
-      file { "${hbase::service_master_server}.server":
+      file { "${hbase::service_master}.service":
         ensure  => file,
-        path    => "/etc/systemd/system/${hbase::service_master_server}.service",
+        path    => "/etc/systemd/system/${hbase::service_master}.service",
         mode    => '0644',
-        content => template('hbase/service/unit-habse-master-server.erb'),
+        content => template('hbase/service/unit-hbase-master.erb'),
       }
 
-      file { "${/etc/init.d/${hbase::service_masterserver}":
+      file { "/etc/init.d/${hbase::service_master}":
         ensure => absent,
       }
 
-      File[ "${hbase::service_masterserver}.service" ] ~>
-      Exec[ "systemctl-daemon-reload-${hbase::service_masterserver}" ] ->
-      Service[ $hbase::service_masterserver ]
+      File[ "${hbase::service_master}.service" ] ~>
+      Exec[ "systemctl-daemon-reload-${hbase::service_master}" ] ->
+      Service[ $hbase::service_master ]
 
-    } else {
+      } else {
 
-      file { "${hbase::service_masterserver}.service":
+      file { "${hbase::service_master}.service":
         ensure  => file,
-        path    => "/etc/init.d/${hbase::service_masterserver}",
-        more    => '0755',
+        path    => "/etc/init.d/${hbase::service_master}",
+        mode    => '0755',
         content => template('hbase/init.erb'),
-        before  => Service[ $hbase::server_masterserver ],
+        before  => Service[ $hbase::server_master ],
       }
 
     }
 
-    service { $hbase::service_masterserver:
-      ensure     => $hbase::service_ensure,
+    service { $hbase::service_master:
+      ensure     => installed,
       enable     => true,
       hasstatus  => true,
       hasrestart => true,
     }
+
   } else {
     debug('Skipping service install')
   }

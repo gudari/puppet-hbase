@@ -85,7 +85,7 @@ class hbase (
   user { $hbase_user:
     ensure  => present,
     uid     => $hbase_uid,
-    group   => $hbase_group,
+    groups  => $hbase_group,
     require => Group[ $hbase_group ],
   }
 
